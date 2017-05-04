@@ -1,9 +1,11 @@
-package admin;
+
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -89,7 +91,7 @@ public class AdminMenu {
 	        	 String publishDate = publishDateField.getText();
 	        	 
 	        	 
-	        	 admin.addBook(title, author, isbn, publisher, publishDate);
+	        	 //admin.addBook(title, author, isbn, publisher, publishDate);
 	         }          
 	      });
 		
@@ -106,6 +108,7 @@ public class AdminMenu {
 	//Menu for adding a new Reader to the DB
 	private static void addReaderMenu() {
 		
+		JFrame frame = new JFrame();
 		String[] labels = {"Name: ", "Address: ", "Phone Number: "};
 		
 		JTextField nameField = new JTextField();
@@ -119,7 +122,8 @@ public class AdminMenu {
 		//Create and populate the panel.
 		JPanel p = new JPanel(new GridLayout(6,0, 10, 4));
 		
-		JButton addBookButton = new JButton("Add Book");
+		JButton addBookButton = new JButton("Add Reader");
+		JButton cancelButton = new JButton("Cancel");
 		
 		for (int i = 0; i < numPairs; i++) {
 		    JLabel l = new JLabel(labels[i]);
@@ -129,6 +133,17 @@ public class AdminMenu {
 		}
 	
 		p.add(addBookButton);
+		p.add(cancelButton);
+		
+		//TODO get this shit to work
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSED));
+				
+			}
+			
+		});
 		
 		addBookButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
@@ -136,13 +151,19 @@ public class AdminMenu {
 	        	 String address = addressField.getText();
 	        	 String phoneNumber = phoneNumberField.getText();
 	        	 
-	        	 admin.addReader(name, address, phoneNumber);
+	        	 try {
+					admin.addReader(name, address, phoneNumber);
+					System.out.println("reader added");
+	        	 } catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 	         }          
 	      });
 		
 		//add panel to frame
-		JFrame frame = new JFrame();
-		frame.setTitle("Add a new Book");
+		
+		frame.setTitle("Add a new Reader");
 		frame.add(p);
 		frame.setSize(300, 200);
 		

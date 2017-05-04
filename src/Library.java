@@ -6,6 +6,9 @@ public class Library {
 	private String address;
 	private Book[] bookName;
 	private int[] numOfCopies;
+	private Reader[] topReaders = new Reader[10]; 
+	private Book[] topBooks = new Book[10];
+	
 	
 	public Library(int libId, String branchName, String address){
 		this.libId = libId;
@@ -13,6 +16,24 @@ public class Library {
 		this.address = address;
 	}
 	
+	
+	public Reader[] getTopReaders() {
+		
+		
+		
+		
+		
+		return topReaders;
+	} 
+	
+	public Book[] getTopBooks() {
+		
+		
+		
+		
+		
+		return topBooks;
+	} 
 	
 	
 }

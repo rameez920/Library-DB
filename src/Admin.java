@@ -35,11 +35,13 @@ public class Admin {
 		con.close();
 	}
 	
-	public void addBook(String title, String author, int ISBN, int publisherID, 
-							String publishDate, int branchID) throws SQLException {
+	public void addBook(String title, String author, int ISBN, String publisher, 
+							String publishDate, String publisherAddress, int branchID) throws SQLException {
 		
 		//update entry in author table
 		//create new publisher if necessary
+		int publisherID = checkPublisher(publisher, publisherAddress);
+		
 		Connection con = Connect.getConnection();
 		
 		String query1 = "INSERT into Book" + "(Title, P_ID, P_Date, ISBN, Branch_ID)" 
@@ -57,7 +59,49 @@ public class Admin {
 		con.close();
 	
 		String query2 = "INSERT into Author";
+		con.close();
+
 		//need to get book id before save into author table
+	}
+	
+	//Checks publisher info when a new book is added
+	//if publisher already exists returns that ID
+	//else insert the new publisher into DB and return new ID
+	private static int checkPublisher(String publisher, String address) throws SQLException {
+		Connection con = Connect.getConnection();
+		
+		String query = "SELECT * FROM Publisher where publisher.P_ID = ?";
+		
+		PreparedStatement st = con.prepareStatement(query);
+		
+		st.setString(1, publisher);
+		
+		ResultSet rs = st.executeQuery();
+		
+		if (rs.next())
+			return rs.getInt("P_ID");
+		else {
+			String query2 = "INSERT into Publisher(P_Name, P_Address) VALUES (?, ?)";
+			PreparedStatement st1 = con.prepareStatement(query2);
+			
+			st1.setString(1, publisher);
+			st1.setString(2, address);
+			
+			st1.execute();
+			
+			String query3 = "SELECT publisher.P_ID FROM publisher where publisher.P_Name = ?";
+			PreparedStatement st2 = con.prepareStatement(query3);
+			
+			st2.setString(1, publisher);
+			
+			ResultSet pID = st2.executeQuery();
+			
+			while(pID.next()) {
+				return pID.getInt("P_ID");
+			}
+			
+			return 0;
+		}
 	}
 	
 	public static boolean checkLogin(int ID, String password) throws SQLException {
@@ -89,8 +133,15 @@ public class Admin {
 		ResultSet rs = st.executeQuery();
 		
 		
-		return null;
-	
+		if (rs.next()) {
+			String branchName = rs.getString("BR_Name");
+			String address = rs.getString("BR_Location");
+			
+			con.close();
+			return new Library(branchID, branchName, address);
+		
+		} else 
+			return null;
 	}
 	
 

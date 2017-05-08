@@ -1,8 +1,11 @@
-
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Reader {
-
+	
 	private int readerId;
 	private String firstName;
 	private String lastName;
@@ -19,44 +22,6 @@ public class Reader {
 		this.phoneNumber = phoneNumber;
 		borrowCount = 0;
 		reserveCount = 0;
-	}
-	
-	public boolean reserve(String bookTitle){
-		//return true if book is successfully reserved
-		//Reserved books must be picked up before 6pm o/w cancel
-		//Can not reserve more than 10 books
-		return true;
-	}
-	
-	public void printReserved(){
-		//Print stack of currently reserved books
-		return;
-	}
-	
-	public boolean borrow(String bookTitle){
-		//return true if book is successfully borrowed
-		return true;
-	}
-	
-	public void printBorrowed(){
-		//Print stack of currently borrowed books
-		return;
-	}
-	
-	public int calculateFine(Book book){
-		//Calculate the fine on the book
-		//(Current date - Due date) * 20 cents
-		return 0;
-	}
-	
-	public boolean returnBook(String bookTitle){
-		
-		return true;
-	}
-	
-	public boolean returnBook(int bookIsbn){
-		
-		return true;
 	}
 	
 	public int getReaderId() {

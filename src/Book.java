@@ -4,6 +4,7 @@ public class Book {
 
 	private int bookId;
 	private int ISBN;
+	private int branchId;
 	private String title;
 	private String author;
 	private String publisher;
@@ -11,13 +12,17 @@ public class Book {
 	private Date bDateTime;
 	private Date rDateTime;
 	
-	public Book(int bookId, int ISBN, String title, String author, String publisher, Date pubDate){
+	public Book(int bookId, int ISBN, String title, String author, String publisher, Date pubDate, int branchId){
 		this.bookId = bookId;
 		this.ISBN = ISBN;
 		this.title = title;
 		this.author = author;
 		this.publisher = publisher;
 		this.pubDate = pubDate;
+	}
+	
+	public Book(){
+		
 	}
 	
 	public int getBookId() {

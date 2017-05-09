@@ -108,7 +108,7 @@ public class Admin {
 	
 	
 	private static int checkAuthor(String authorName) throws SQLException {
-Connection con = Connect.getConnection();
+		Connection con = Connect.getConnection();
 		
 		String query = "SELECT * FROM author where author.Auth_Name = ?";
 		

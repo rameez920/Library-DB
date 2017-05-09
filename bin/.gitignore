@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -/Book.class
 -/Connect.class
 -/Library.class
@@ -16,3 +17,23 @@
 -/AdminMenu$5.class
 -/AdminMenu.class
 -/Branch.class
+=======
+/Book.class
+/Connect.class
+/Library.class
+/Reader.class
+/ReaderMenu$GuiPanel.class
+/ReaderMenu.class
+/admin/
+/connection/
+/branch/
+/Reader/
+/Admin.class
+/AdminMenu$1.class
+/AdminMenu$2.class
+/AdminMenu$3.class
+/AdminMenu$4.class
+/AdminMenu$5.class
+/AdminMenu.class
+/Branch.class
+>>>>>>> parent of 2cebdc1... New Stuff

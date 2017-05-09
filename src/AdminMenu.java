@@ -17,9 +17,6 @@ import javax.swing.SpringLayout;
 
 public class AdminMenu {
 	
-	public static void main(String[] args) {
-		new AdminMenu();
-	}
 	private static Admin admin;
 	
 	//create root menu for admin actions

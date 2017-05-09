@@ -1,6 +1,7 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,9 +27,19 @@ public class Connect {
 					Connection con = DriverManager.getConnection( URL, username, password); 
 					System.out.println("Connected to Database: ");
 					
-					Admin admin = new Admin(112, "password");
 					
-					admin.addReader("James Jones", "123 Cleaveland OH", "84511226633");
+					String query3 = "SELECT publisher.P_ID FROM publisher where publisher.P_Name = ?";
+					PreparedStatement st2 = con.prepareStatement(query3);
+					
+					st2.setString(1, "Random House");
+					
+					ResultSet pID = st2.executeQuery();
+					
+					while(pID.next())
+						System.out.println(pID.getInt("P_ID"));
+					
+					con.close();
+				
 				}
 				catch (SQLException err) {
 					System.out.println(err.getMessage());
@@ -52,6 +63,10 @@ public class Connect {
 			e.printStackTrace();
 		} 
 		return null;
+	}
+	
+	private static void generateReaders() {
+		
 	}
 
 }

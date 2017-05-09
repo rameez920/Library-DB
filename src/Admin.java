@@ -41,10 +41,11 @@ public class Admin {
 		//update entry in author table
 		//create new publisher if necessary
 		int publisherID = checkPublisher(publisher, publisherAddress);
+		int authorID = checkAuthor(author);
 		
 		Connection con = Connect.getConnection();
 		
-		String query1 = "INSERT into Book" + "(Title, P_ID, P_Date, ISBN, Branch_ID)" 
+		String query1 = "INSERT into Book" + "(Title, P_ID, P_Date, ISBN, Branch_ID, Auth_ID)" 
 							+ "VALUES" + "(?, ?, ?, ?, ?)";
 		
 		PreparedStatement addBook = con.prepareStatement(query1);
@@ -54,11 +55,12 @@ public class Admin {
 		addBook.setString(3, publishDate);
 		addBook.setInt(4, ISBN);
 		addBook.setInt(5, branchID);
+		addBook.setInt(6, authorID);
 		
 		addBook.execute();
 		con.close();
 	
-		String query2 = "INSERT into Author";
+		
 		con.close();
 
 		//need to get book id before save into author table
@@ -67,14 +69,14 @@ public class Admin {
 	//Checks publisher info when a new book is added
 	//if publisher already exists returns that ID
 	//else insert the new publisher into DB and return new ID
-	private static int checkPublisher(String publisher, String address) throws SQLException {
+	private static int checkPublisher(String publisherName, String address) throws SQLException {
 		Connection con = Connect.getConnection();
 		
-		String query = "SELECT * FROM Publisher where publisher.P_ID = ?";
+		String query = "SELECT * FROM Publisher where publisher.P_Name = ?";
 		
 		PreparedStatement st = con.prepareStatement(query);
 		
-		st.setString(1, publisher);
+		st.setString(1, publisherName);
 		
 		ResultSet rs = st.executeQuery();
 		
@@ -84,7 +86,7 @@ public class Admin {
 			String query2 = "INSERT into Publisher(P_Name, P_Address) VALUES (?, ?)";
 			PreparedStatement st1 = con.prepareStatement(query2);
 			
-			st1.setString(1, publisher);
+			st1.setString(1, publisherName);
 			st1.setString(2, address);
 			
 			st1.execute();
@@ -92,7 +94,7 @@ public class Admin {
 			String query3 = "SELECT publisher.P_ID FROM publisher where publisher.P_Name = ?";
 			PreparedStatement st2 = con.prepareStatement(query3);
 			
-			st2.setString(1, publisher);
+			st2.setString(1, publisherName);
 			
 			ResultSet pID = st2.executeQuery();
 			
@@ -103,6 +105,42 @@ public class Admin {
 			return 0;
 		}
 	}
+	
+	
+	private static int checkAuthor(String authorName) throws SQLException {
+Connection con = Connect.getConnection();
+		
+		String query = "SELECT * FROM author where author.Auth_Name = ?";
+		
+		PreparedStatement st = con.prepareStatement(query);
+		
+		st.setString(1, authorName);
+		
+		ResultSet rs = st.executeQuery();
+		
+		if (rs.next())
+			return rs.getInt("P_ID");
+		else {
+			String query2 = "INSERT into Author(Auth_Name) VALUES (?)";
+			PreparedStatement st1 = con.prepareStatement(query2);
+			
+			st1.setString(1, authorName);
+			
+			st1.execute();
+			
+			String query3 = "SELECT publisher.P_ID FROM publisher where publisher.P_Name = ?";
+			PreparedStatement st2 = con.prepareStatement(query3);
+			
+			st2.setString(1, authorName);
+			
+			ResultSet aID = st2.executeQuery();
+			
+			while(aID.next()) {
+				return aID.getInt("Auth_ID");
+			}
+		}
+		return 0;
+}
 	
 	public static boolean checkLogin(int ID, String password) throws SQLException {
 		

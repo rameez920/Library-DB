@@ -43,12 +43,14 @@ public class Library {
 
 
 	public JPanel getTopReaders() {
-		String query = "SELECT borrow.Reader_ID, COUNT(borrow.Book_ID) "
-						+ "FROM borrow LEFT JOIN reader ON borrow.Reader_ID = reader.Reader_ID "
-						+ "GROUP BY borrow.Reader_ID IN "
-						+ "(SELECT borrow.Reader_ID FROM borrow, book"
-						+ "WHERE borrow.Book_ID = book.Book_ID AND book.Branch_ID = ?)"; 
+//		String query = "SELECT borrow.Reader_ID, COUNT(borrow.Book_ID) "
+//						+ "FROM borrow LEFT JOIN reader ON borrow.Reader_ID = reader.Reader_ID "
+//						+ "GROUP BY borrow.Reader_ID IN "
+//						+ "(SELECT borrow.Reader_ID FROM borrow, book "
+//						+ "WHERE borrow.Book_ID = book.Book_ID AND book.Branch_ID = ?)"; 
 		
+		String query = "SELECT borrow.Reader_ID, COUNT(borrow.Book_ID) FROM borrow LEFT JOIN reader ON borrow.Reader_ID = reader.Reader_ID GROUP BY borrow.Reader_ID IN (SELECT borrow.Reader_ID FROM borrow, book WHERE borrow.Book_ID = book.Book_ID AND book.Branch_ID = ?)";
+	
 		Connection con = Connect.getConnection();
 		
 		String[] columnNames = {"Reader_ID", "Num of Books"};
@@ -63,7 +65,7 @@ public class Library {
 			int i = 0;
 			while(rs.next()){
 				data[i][0] = rs.getString("Reader_ID");
-				data[i][1] = rs.getString("COUNT(borrow.Book_ID");
+				data[i][1] = rs.getString("COUNT(borrow.Book_ID)");
 				i++;
 			}
 		} catch (SQLException e) {
@@ -95,10 +97,11 @@ public class Library {
 	}
 	
 	public JPanel getTopBooks() {
-		String query = "SELECT borrow.Book_ID, Count(borrow.Reader_ID) "
- 				+ "FROM borrow left join book ON borrow.Book_ID = book.Book_ID "
- 				+ "WHERE book.Branch_ID = ? group by borrow.Book_ID";
+//		String query = "SELECT borrow.Book_ID, Count(borrow.Reader_ID) "
+// 				+ "FROM borrow left join book ON borrow.Book_ID = book.Book_ID "
+// 				+ "WHERE book.Branch_ID = ? group by borrow.Book_ID";
 		
+		String query = "SELECT borrow.Book_ID, Count(borrow.Reader_ID) FROM borrow left join book ON borrow.Book_ID = book.Book_ID WHERE book.Branch_ID = ? group by borrow.Book_ID";
 		Connection con = Connect.getConnection();
 		
 		String[] columnNames = {"Book_ID", "Num of Borrowers"};
@@ -112,8 +115,11 @@ public class Library {
 		
 			int i = 0;
 			while (rs.next()) {
+				
 				data[i][0] = rs.getString("Book_ID");
-				data[i][1] = rs.getString("COUNT(borrow.Reader_ID");
+				System.out.println(data[i][0]);
+				data[i][1] = rs.getString("COUNT(borrow.Reader_ID)");
+				System.out.println(data[i][1]);
 				i++;
 			}
 		

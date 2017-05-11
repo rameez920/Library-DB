@@ -141,7 +141,7 @@ public class AdminMenu {
 		
 		f.setTitle("Branch Info");
 		f.setLocationRelativeTo(null);
-		f.setSize(350, 400);
+		f.setSize(550, 400);
 		f.setVisible(true);
 	}
 	

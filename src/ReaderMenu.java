@@ -85,7 +85,10 @@ public class ReaderMenu{
 				Statement st = con.createStatement();
 				ResultSet rs = st.executeQuery(query);){
 			
-			if(!rs.next()) return;
+			if(!rs.next()) {
+				JOptionPane.showMessageDialog(null, "Check Out Not Successful");
+				return;
+			}
 			
 			int bookid = rs.getInt("Book_ID");
 			
@@ -102,6 +105,8 @@ public class ReaderMenu{
 					
 					preparedStmt.execute();
 					reserveCount--;
+					
+					JOptionPane.showMessageDialog(null, "Successfully Checked Out Book ID Number " + book_id);
 				}
 				
 			}
@@ -146,16 +151,18 @@ public class ReaderMenu{
 				Statement st = con.createStatement();
 				ResultSet rs = st.executeQuery(query1);){
 			
-			if(rs.next()) return; 
+			if(rs.next()) {
+				JOptionPane.showMessageDialog(null, "Reservation Failed");
+				return; 
+			}
 			
 			try(Connection con2 = DriverManager.getConnection(URL, username, password);
 						PreparedStatement preparedStmt = con2.prepareStatement(query2);){
 				
 				preparedStmt.execute();
-				System.out.println("hello");
+				JOptionPane.showMessageDialog(null, "Successfully Reserved Book ID Number " + book_id);
 			}
-			
-			
+				
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -171,7 +178,11 @@ public class ReaderMenu{
 				Statement st = con.createStatement();
 				ResultSet rs = st.executeQuery(query);){
 			
-			rs.next();
+			if(!rs.next()){
+				JOptionPane.showMessageDialog(null, "Invalid Book ID");
+				return;
+			}
+				
 			String returnDate = rs.getString("R_Date");
 			
 			Date date = new Date();
@@ -190,9 +201,13 @@ public class ReaderMenu{
 				
 	            long diffDays = diff / (24 * 60 * 60 * 1000);
 
-	            if(diffDays < 0) return;
+	            if(diffDays < 0) {
+	            	bookFine = 0; 
+	            	return;
+	            }
 	            
 	            bookFine = diffDays * .20;
+	            JOptionPane.showMessageDialog(new JFrame(), "Current Fine For The Book Is: $" + bookFine);
 	            
 			}catch(Exception e){
 				e.printStackTrace();
@@ -228,7 +243,7 @@ public class ReaderMenu{
 			e.printStackTrace();
 		}
 		
-		createBorrowMenu(data, columnNames);
+		createReserveMenu(data, columnNames);
 	}
 	
 	public void printBorrowed(){
@@ -316,6 +331,21 @@ public class ReaderMenu{
 		
 	}
 	
+	public void createReserveMenu(Object[][] data, String[] columnNames){
+		
+		SearchGuiPanel guiPanel = new SearchGuiPanel(data, columnNames);
+		
+		JFrame frame = new JFrame("Reserved List");
+		frame.add(guiPanel);
+		
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setResizable(false);
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		
+	}
+	
 	public void createReaderMenu(){
 		
 		ReaderGuiPanel guiPanel = new ReaderGuiPanel();
@@ -372,7 +402,6 @@ public class ReaderMenu{
 						computeFineButton, printBorrowButton, printReservedButton;
 		private JTextField searchField, checkOutField, returnField, reserveField,
 						   computeFineField;
-		private JDialog fineDialog;
 		
 		public ReaderGuiPanel(){
 
@@ -446,8 +475,6 @@ public class ReaderMenu{
 				public void actionPerformed(ActionEvent e) {
 					calculateFine(computeFineField.getText());
 					computeFineField.setText("");
-					JOptionPane.showMessageDialog(new JFrame(), "Current Fine For The Book Is: $" + bookFine);
-
 				}
 			});
 			
@@ -488,8 +515,6 @@ public class ReaderMenu{
 		}
 		
 	}
-	
-	//Implement actionlistener on button1 to search a book by ID, title, or publisher name
 	
 }
 

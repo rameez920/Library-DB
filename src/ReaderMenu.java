@@ -23,8 +23,8 @@ import javax.swing.JTextField;
 public class ReaderMenu{
 	
 	private final String URL = "jdbc:mysql://localhost:3306/librarydb";
-	private String username = "root";
-	private String password ="java";
+	private String username = "java";
+	private String password ="password";
 	private String readerId;
 	private int checkOutCount;
 	private int reserveCount;

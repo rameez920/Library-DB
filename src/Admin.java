@@ -46,7 +46,7 @@ public class Admin {
 		Connection con = Connect.getConnection();
 		
 		String query1 = "INSERT into Book" + "(Title, P_ID, P_Date, ISBN, Branch_ID, Auth_ID)" 
-							+ "VALUES" + "(?, ?, ?, ?, ?)";
+							+ "VALUES" + "(?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement addBook = con.prepareStatement(query1);
 		
@@ -119,7 +119,7 @@ public class Admin {
 		ResultSet rs = st.executeQuery();
 		
 		if (rs.next())
-			return rs.getInt("P_ID");
+			return rs.getInt("Auth_ID");
 		else {
 			String query2 = "INSERT into Author(Auth_Name) VALUES (?)";
 			PreparedStatement st1 = con.prepareStatement(query2);
@@ -151,7 +151,7 @@ public class Admin {
 		st.setString(2, password);
 		
 		ResultSet rs = st.executeQuery();
-		con.close();
+		
 		
 		//if rs is empty then admin credentials do not exist in DB
 		if (!rs.next()) 
@@ -180,6 +180,30 @@ public class Admin {
 		
 		} else 
 			return null;
+	}
+	
+	public Book searchBook(int bookID) throws SQLException {
+		
+		Connection con = Connect.getConnection();
+		PreparedStatement st = con.prepareStatement("select * from Book where Book_ID = ?");
+		st.setInt(1, bookID);
+		
+		ResultSet rs = st.executeQuery();
+		
+		if (rs.next()){
+			String title = rs.getString("Title");
+			int pID = rs.getInt("P_ID");
+			String pDate = rs.getString("P_Date");
+			String bID = rs.getString("Branch_ID");
+			int isbn = rs.getInt("ISBN");
+			int aID = rs.getInt("Auth_ID");
+		
+			return new Book(bookID, isbn, title, aID, pID, pDate);
+		
+		}
+		
+		return null;
+	
 	}
 	
 

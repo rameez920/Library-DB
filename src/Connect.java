@@ -20,33 +20,9 @@ public class Connect {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Connecting database...");
-		
-		//Try with resources so connection auto closes
-		try {
-					Connection con = DriverManager.getConnection( URL, username, password); 
-					System.out.println("Connected to Database: ");
-					
-					
-					String query3 = "SELECT publisher.P_ID FROM publisher where publisher.P_Name = ?";
-					PreparedStatement st2 = con.prepareStatement(query3);
-					
-					st2.setString(1, "Random House");
-					
-					ResultSet pID = st2.executeQuery();
-					
-					while(pID.next())
-						System.out.println(pID.getInt("P_ID"));
-					
-					con.close();
-				
-				}
-				catch (SQLException err) {
-					System.out.println(err.getMessage());
-				}
+		new AdminMenu(7, "2eIuLoE");
 		
 		
-		new AdminMenu();
 
 	}
 	

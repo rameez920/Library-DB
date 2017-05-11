@@ -20,8 +20,8 @@ public class AdminMenu {
 	private static Admin admin;
 	
 	//create root menu for admin actions
-	public AdminMenu() {
-		admin = new Admin(123, "password");
+	public AdminMenu(int id, String password) {
+		admin = new Admin(id, password);
 		
 		JFrame f = new JFrame();
         
@@ -46,7 +46,7 @@ public class AdminMenu {
 	         }          
 	      });
 		
-		JButton branchSearchButton = new JButton("Search");
+		JButton branchSearchButton = new JButton("Search Branch");
 		branchSearchButton.setBounds(130,100,100, 40);  
 		
 		branchSearchButton.addActionListener(new ActionListener() {
@@ -66,23 +66,54 @@ public class AdminMenu {
 	        	 
 	        	 
 	        	 } catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+	         }          
+	      });
+		
+		JTextField bookSearchField = new JTextField(15);
+		JLabel bookSearchLabel = new JLabel("Book ID:");
+		
+		JButton bookSearchButton = new JButton("Search Book");
+		bookSearchButton.setBounds(130,150,100, 40);  
+		
+		bookSearchButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	 int bookID = Integer.parseInt(bookSearchField.getText());
+	        	 
+	        	 try {
+	        		 Book book = admin.searchBook(bookID);
+				
+	        		 if (book== null) {
+	        			 JOptionPane.showMessageDialog(null, "Invalid Search");
+	        		 } else {
+	        			 JOptionPane.showMessageDialog(null, "ID: " + book.getBookId() + "\nTitle: " 
+	        					 							+ book.getTitle() +  "\nStatus: " + book.getStatus());
+	        		 }
+	        	 
+	        	 } catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 	         }          
 	      });
 		          
-		f.add(addBookButton);  
-		f.add(addReaderButton);    
+		
 		f.add(branchSearchLabel);
 		f.add(branchSearchField);
 		f.add(branchSearchButton);
+		f.add(bookSearchLabel);
+		f.add(bookSearchField);
+		f.add(bookSearchButton);
+		f.add(addBookButton);  
+		f.add(addReaderButton);    
 		
-		FlowLayout flow = new FlowLayout();
 		
 		f.setTitle("Library Management System");
-		f.setSize(300,150);
-		f.setLayout(flow);  
+		f.setSize(425,130);
+		//f.setResizable(false);
+		f.setLocationRelativeTo(null);
+		f.setLayout(new GridLayout(3, 0, 10, 4));  
 		f.setVisible(true);  
 	}
 
@@ -91,16 +122,26 @@ public class AdminMenu {
 	private static void branchDisplay(Library lib) {
 		JFrame f = new JFrame();
 		
-		JLabel branchNameLabel = new JLabel("Name: " + lib.getBranchName());
-		JLabel branchLocLabel = new JLabel("Location: " + lib.getAddress());
+		JLabel branchNameLabel = new JLabel("BRANCH NAME: " + lib.getBranchName());
+		JLabel branchLocLabel = new JLabel("LOCATION: " + lib.getAddress());
 		
-		FlowLayout flow = new FlowLayout();
+		JPanel namePanel = new JPanel(new GridLayout(2, 0, 10, 4));
+		namePanel.add(branchNameLabel);
+		namePanel.add(branchLocLabel);
 		
-		f.setLayout(flow);
-		f.add(branchNameLabel);
-		f.add(branchLocLabel);
+		
+		
+		f.setLayout(new FlowLayout());
+		f.add(namePanel);
+		
+		//Spaghetti code that should be cleaned up
+		f.add(lib.getTopReaders());
+		f.add(lib.getTopBooks());
+		
+		
 		f.setTitle("Branch Info");
-		f.setSize(200, 250);
+		f.setLocationRelativeTo(null);
+		f.setSize(350, 400);
 		f.setVisible(true);
 	}
 	
@@ -109,7 +150,7 @@ public class AdminMenu {
 	private static void bookMenu() {
 		
 		String[] labels = {"Title: ", "Author: ", "ISBN: ", "Publisher: ", 
-							"Publish Date: ", "Publisher Address:", "Branch ID:"};
+							"Publish Date (YYYY-MM-DD): ", "Publisher Address:", "Branch ID:"};
 		
 		JTextField titleField = new JTextField();
 		JTextField authorField = new JTextField();
@@ -159,15 +200,11 @@ public class AdminMenu {
 	         }          
 	      });
 		
-		
-		
-		
-		//add panel to frame
 		JFrame frame = new JFrame();
 		frame.setTitle("Add a new Book");
 		frame.add(p);
-		frame.setSize(300, 250);
-		
+		frame.setSize(350, 250);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	
 	}
@@ -229,12 +266,10 @@ public class AdminMenu {
 	         }          
 	      });
 		
-		//add panel to frame
-		
 		frame.setTitle("Add a new Reader");
 		frame.add(p);
 		frame.setSize(300, 200);
-		
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	
 	}

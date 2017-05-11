@@ -2,10 +2,12 @@
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -84,12 +86,23 @@ public class MainMenu {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String userName = adminText1.getText();
+					int adminID = Integer.parseInt(adminText1.getText());
 					String password = adminText2.getText();
 					
 					adminText1.setText("");
 					adminText2.setText("");
-					new AdminMenu();
+					
+					try {
+						
+						if (Admin.checkLogin(adminID, password)) 
+							new AdminMenu(adminID, password);
+						else
+							JOptionPane.showMessageDialog(null, "invalid login");
+					
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 				}
 				

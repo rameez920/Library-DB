@@ -1,3 +1,7 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Book {
@@ -5,19 +9,49 @@ public class Book {
 	private int bookId;
 	private int ISBN;
 	private String title;
-	private String author;
-	private String publisher;
-	private Date pubDate;
+	private int authorID;
+	private int publisher;
+	private String pubDate;
 	private Date bDateTime;
 	private Date rDateTime;
 	
-	public Book(int bookId, int ISBN, String title, String author, String publisher, Date pubDate){
+	
+	public Book(int bookId, int ISBN, String title, int author, int publisher, String pubDate){
 		this.bookId = bookId;
 		this.ISBN = ISBN;
 		this.title = title;
-		this.author = author;
+		this.authorID = author;
 		this.publisher = publisher;
 		this.pubDate = pubDate;
+		
+	}
+	
+	public String getStatus() throws SQLException {
+		String status = null;
+		
+		Connection con = Connect.getConnection();
+		PreparedStatement st = con.prepareStatement("select * from borrow where Book_ID = ?");
+		
+		st.setInt(1, this.bookId);
+		
+		ResultSet rs = st.executeQuery();
+		
+		if (rs.next()) 
+			status = "Borrowed";
+		else {
+			PreparedStatement st2 = con.prepareStatement("select * from reserve where Book_ID = ?");
+			
+			st2.setInt(1, this.bookId);
+			
+			ResultSet rs2 = st.executeQuery();
+			
+			if (rs2.next()) 
+				status = "Reserved";
+			else
+				status = "Available";
+		} 
+			
+		return status;
 	}
 	
 	public int getBookId() {
@@ -44,27 +78,27 @@ public class Book {
 		this.title = title;
 	}
 	
-	public String getAuthor() {
-		return author;
+	public int getAuthor() {
+		return authorID;
 	}
 	
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setAuthor(int author) {
+		this.authorID = author;
 	}
 	
-	public String getPublisher() {
+	public int getPublisher() {
 		return publisher;
 	}
 	
-	public void setPublisher(String publisher) {
+	public void setPublisher(int publisher) {
 		this.publisher = publisher;
 	}
 	
-	public Date getPubDate() {
+	public String getPubDate() {
 		return pubDate;
 	}
 	
-	public void setPubDate(Date pubDate) {
+	public void setPubDate(String pubDate) {
 		this.pubDate = pubDate;
 	}
 
